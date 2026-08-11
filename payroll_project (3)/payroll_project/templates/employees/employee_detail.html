@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-user"></i> {{ employee.name }}
+    </h1>
+    <div>
+        <a href="/employees/{{ employee.id }}/edit/" class="btn btn-warning btn-lg">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="/employees/" class="btn btn-secondary btn-lg">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="glass">
+            <h5 class="mb-3"><i class="fas fa-user-circle"></i> Personal Information</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Employee ID:</td>
+                    <td>{{ employee.employee_id }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Email:</td>
+                    <td>{{ employee.email }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Phone:</td>
+                    <td>{{ employee.phone }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Status:</td>
+                    <td>
+                        {% if employee.status == 'Active' %}
+                            <span class="badge badge-success">{{ employee.status }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ employee.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="glass">
+            <h5 class="mb-3"><i class="fas fa-briefcase"></i> Employment Details</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Position:</td>
+                    <td>{{ employee.position }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Department:</td>
+                    <td>{{ employee.department.name }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Experience:</td>
+                    <td>{{ employee.experience }} years</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Date Joined:</td>
+                    <td>{{ employee.date_joined|date:"d M Y" }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if salary_structure %}
+<div class="glass mb-4">
+    <h5 class="mb-3"><i class="fas fa-money-bill-wave"></i> Salary Structure</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Base Salary:</td>
+                    <td>₹{{ salary_structure.base_salary|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Dearness Allowance:</td>
+                    <td>₹{{ salary_structure.dearness_allowance|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">House Rent Allowance:</td>
+                    <td>₹{{ salary_structure.house_rent_allowance|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Medical Allowance:</td>
+                    <td>₹{{ salary_structure.medical_allowance|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Conveyance Allowance:</td>
+                    <td>₹{{ salary_structure.conveyance_allowance|floatformat:2 }}</td>
+                </tr>
+                <tr class="table-info">
+                    <td class="fw-bold">Gross Salary:</td>
+                    <td class="fw-bold">₹{{ salary_structure.gross_salary|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <a href="/salary-structure/{{ employee.id }}/edit/" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Salary Structure
+    </a>
+</div>
+{% endif %}
+
+{% if deductions %}
+<div class="glass mb-4">
+    <h5 class="mb-3"><i class="fas fa-minus-circle"></i> Deductions</h5>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Income Tax:</td>
+                    <td>₹{{ deductions.income_tax|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Provident Fund:</td>
+                    <td>₹{{ deductions.provident_fund|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">ESI:</td>
+                    <td>₹{{ deductions.esi|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Health Insurance:</td>
+                    <td>₹{{ deductions.health_insurance|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Professional Tax:</td>
+                    <td>₹{{ deductions.professional_tax|floatformat:2 }}</td>
+                </tr>
+                <tr class="table-danger">
+                    <td class="fw-bold">Total Deductions:</td>
+                    <td class="fw-bold">₹{{ deductions.total_deductions|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <a href="/deductions/{{ employee.id }}/edit/" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Deductions
+    </a>
+</div>
+{% endif %}
+
+{% if recent_payslips %}
+<div class="glass">
+    <h5 class="mb-3"><i class="fas fa-file-invoice"></i> Recent Payslips</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Payslip #</th>
+                <th>Month</th>
+                <th>Gross Salary</th>
+                <th>Deductions</th>
+                <th>Net Salary</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payslip in recent_payslips %}
+            <tr>
+                <td>{{ payslip.payslip_number }}</td>
+                <td>{{ payslip.payroll.month }}/{{ payslip.payroll.year }}</td>
+                <td>₹{{ payslip.gross_salary|floatformat:2 }}</td>
+                <td>₹{{ payslip.total_deductions|floatformat:2 }}</td>
+                <td class="fw-bold">₹{{ payslip.net_salary|floatformat:2 }}</td>
+                <td>
+                    <a href="/payslips/{{ payslip.id }}/pdf/" class="btn btn-sm btn-primary">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

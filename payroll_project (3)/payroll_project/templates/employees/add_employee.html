@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-user-plus"></i> Add New Employee
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="glass">
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- Basic Information -->
+                <h5 class="mb-3"><i class="fas fa-user"></i> Basic Information</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter full name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" placeholder="Enter phone number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Date Joined *</label>
+                        <input type="date" name="date_joined" class="form-control" required>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Employment Details -->
+                <h5 class="mb-3"><i class="fas fa-briefcase"></i> Employment Details</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Position *</label>
+                        <select name="position" class="form-select" required>
+                            <option value="">Select Position</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Director">Director</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Department *</label>
+                        <select name="department" class="form-select" required>
+                            <option value="">Select Department</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Experience (Years) *</label>
+                        <input type="number" name="experience" class="form-control" placeholder="0" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Base Salary *</label>
+                        <input type="number" name="base_salary" class="form-control" placeholder="0" step="0.01" required>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Address -->
+                <h5 class="mb-3"><i class="fas fa-map-marker-alt"></i> Address</h5>
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <textarea name="address" class="form-control" placeholder="Enter address" rows="3"></textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" placeholder="City">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">State</label>
+                        <input type="text" name="state" class="form-control" placeholder="State">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Zip Code</label>
+                        <input type="text" name="zip_code" class="form-control" placeholder="Zip Code">
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Tax & Bank Details -->
+                <h5 class="mb-3"><i class="fas fa-university"></i> Tax & Bank Details</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">PAN</label>
+                        <input type="text" name="pan" class="form-control" placeholder="PAN Number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Aadhar</label>
+                        <input type="text" name="aadhar" class="form-control" placeholder="Aadhar Number">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Bank Account</label>
+                        <input type="text" name="bank_account" class="form-control" placeholder="Bank Account Number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">IFSC Code</label>
+                        <input type="text" name="ifsc_code" class="form-control" placeholder="IFSC Code">
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Salary Components -->
+                <h5 class="mb-3"><i class="fas fa-money-bill-wave"></i> Salary Components</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Dearness Allowance</label>
+                        <input type="number" name="dearness_allowance" class="form-control" placeholder="0" step="0.01" value="0">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">House Rent Allowance</label>
+                        <input type="number" name="house_rent_allowance" class="form-control" placeholder="0" step="0.01" value="0">
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Deductions -->
+                <h5 class="mb-3"><i class="fas fa-minus-circle"></i> Deductions</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Income Tax</label>
+                        <input type="number" name="income_tax" class="form-control" placeholder="0" step="0.01" value="0">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Provident Fund</label>
+                        <input type="number" name="provident_fund" class="form-control" placeholder="0" step="0.01" value="0">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-save"></i> Add Employee
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/employees/" class="btn btn-secondary btn-lg w-100">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

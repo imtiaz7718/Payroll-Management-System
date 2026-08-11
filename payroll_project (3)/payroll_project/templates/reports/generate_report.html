@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-file-pdf"></i> Generate Payroll Report
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mx-auto">
+        <div class="glass">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Report Name *</label>
+                    <input type="text" name="report_name" class="form-control" placeholder="e.g., January 2026 Payroll" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Report Type *</label>
+                    <select name="report_type" class="form-select" required>
+                        <option value="">Select Type</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Annual">Annual</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">From Month *</label>
+                        <input type="number" name="month_from" class="form-control" min="1" max="12" value="{{ current_month }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">To Month *</label>
+                        <input type="number" name="month_to" class="form-control" min="1" max="12" value="{{ current_month }}" required>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Year *</label>
+                    <input type="number" name="year" class="form-control" value="{{ current_year }}" required>
+                </div>
+                
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle"></i> The report will include all approved payrolls for the selected period.
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-file-pdf"></i> Generate Report
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/reports/" class="btn btn-secondary btn-lg w-100">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
