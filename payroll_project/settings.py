@@ -10,22 +10,38 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
+import urllib.parse
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+IS_VERCEL = bool(os.environ.get("VERCEL"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-raa_&ys&@o-d$i_vz%d93yn81br15%!ht&1ud5n3110=g%&7pm'
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    'django-insecure-raa_&ys&@o-d$i_vz%d93yn81br15%!ht&1ud5n3110=g%&7pm',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "false" if IS_VERCEL else "true").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app", ".vusercontent.net"]
+if os.environ.get("VERCEL_URL"):
+    ALLOWED_HOSTS.append(os.environ["VERCEL_URL"])
+if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
+    ALLOWED_HOSTS.append(os.environ["VERCEL_PROJECT_PRODUCTION_URL"])
+
+CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app", "https://*.vusercontent.net"]
+if IS_VERCEL:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    SECURE_HSTS_SECONDS = 63072000
 
 
 # Application definition
@@ -78,12 +94,31 @@ WSGI_APPLICATION = 'payroll_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
+
+if DATABASE_URL:
+    _db = urllib.parse.urlparse(DATABASE_URL)
+    _query = dict(urllib.parse.parse_qsl(_db.query))
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": _db.path.lstrip("/"),
+            "USER": urllib.parse.unquote(_db.username or ""),
+            "PASSWORD": urllib.parse.unquote(_db.password or ""),
+            "HOST": _db.hostname,
+            "PORT": _db.port or 5432,
+            "CONN_MAX_AGE": 0,
+            "OPTIONS": {"sslmode": _query.get("sslmode", "require")},
+        }
     }
-}
+else:
+    # Local fallback
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -121,6 +156,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
