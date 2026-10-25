@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "false" if IS_VERCEL else "true").lower() == "true"
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app", ".vusercontent.net"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".vercel.app", ".vusercontent.net", ".vercel.run"]
 if os.environ.get("VERCEL_URL"):
     ALLOWED_HOSTS.append(os.environ["VERCEL_URL"])
 if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
@@ -160,7 +160,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 WHITENOISE_USE_FINDERS = True
 
-CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app", "https://*.vusercontent.net"]
+CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app", "https://*.vusercontent.net", "https://*.vercel.run"]
 if os.environ.get("VERCEL_PROJECT_PRODUCTION_URL"):
     CSRF_TRUSTED_ORIGINS.append(f"https://{os.environ['VERCEL_PROJECT_PRODUCTION_URL']}")
 
