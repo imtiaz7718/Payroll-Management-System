@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-user-money"></i> Salary Structure - {{ employee.name }}
+    </h1>
+</div>
+
+<div class="glass">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5><i class="fas fa-user-circle"></i> Employee Info</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Name:</td>
+                    <td>{{ employee.name }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">ID:</td>
+                    <td>{{ employee.employee_id }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Position:</td>
+                    <td>{{ employee.position }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h5><i class="fas fa-money-bill-wave"></i> Salary Details</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="fw-bold">Base Salary:</td>
+                    <td>₹{{ salary_structure.base_salary|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Total Allowances:</td>
+                    <td>₹{{ salary_structure|get_allowances|floatformat:2 }}</td>
+                </tr>
+                <tr class="table-success">
+                    <td class="fw-bold">Gross Salary:</td>
+                    <td>₹{{ salary_structure.gross_salary|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <a href="/salary-structure/{{ employee.id }}/edit/" class="btn btn-warning btn-lg">
+        <i class="fas fa-edit"></i> Edit Salary Structure
+    </a>
+    <a href="/employees/{{ employee.id }}/" class="btn btn-secondary btn-lg">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+</div>
+{% endblock %}

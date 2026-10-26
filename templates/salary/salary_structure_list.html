@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-money-bill-wave"></i> Salary Structure
+    </h1>
+</div>
+
+<div class="table-glass">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Base Salary</th>
+                <th>Allowances</th>
+                <th>Gross Salary</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for salary_struct in salary_structures %}
+            <tr>
+                <td><strong>{{ salary_struct.employee.name }}</strong></td>
+                <td>₹{{ salary_struct.base_salary|floatformat:2 }}</td>
+                <td>₹{{ salary_struct.dearness_allowance|floatformat:2 }} + ₹{{ salary_struct.house_rent_allowance|floatformat:2 }}</td>
+                <td class="fw-bold">₹{{ salary_struct.gross_salary|floatformat:2 }}</td>
+                <td>
+                    <a href="/salary-structure/{{ salary_struct.employee.id }}/edit/" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

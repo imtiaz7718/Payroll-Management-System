@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-minus-circle"></i> Deductions Management
+    </h1>
+</div>
+
+<div class="table-glass">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Income Tax</th>
+                <th>PF</th>
+                <th>ESI</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deduction in deductions %}
+            <tr>
+                <td><strong>{{ deduction.employee.name }}</strong></td>
+                <td>₹{{ deduction.income_tax|floatformat:2 }}</td>
+                <td>₹{{ deduction.provident_fund|floatformat:2 }}</td>
+                <td>₹{{ deduction.esi|floatformat:2 }}</td>
+                <td class="fw-bold">₹{{ deduction.total_deductions|floatformat:2 }}</td>
+                <td>
+                    <a href="/deductions/{{ deduction.employee.id }}/edit/" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

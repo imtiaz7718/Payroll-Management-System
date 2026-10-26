@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-minus-circle"></i> Edit Deductions - {{ employee.name }}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="glass">
+            <form method="post">
+                {% csrf_token %}
+                
+                <h5 class="mb-4"><i class="fas fa-pound-sign"></i> Deduction Components</h5>
+                
+                <div class="mb-3">
+                    <label class="form-label">Income Tax</label>
+                    <input type="number" name="income_tax" class="form-control" value="{{ deduction.income_tax }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Provident Fund (PF)</label>
+                    <input type="number" name="provident_fund" class="form-control" value="{{ deduction.provident_fund }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Employee State Insurance (ESI)</label>
+                    <input type="number" name="esi" class="form-control" value="{{ deduction.esi }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Health Insurance</label>
+                    <input type="number" name="health_insurance" class="form-control" value="{{ deduction.health_insurance }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Professional Tax</label>
+                    <input type="number" name="professional_tax" class="form-control" value="{{ deduction.professional_tax }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Loan Amount</label>
+                    <input type="number" name="loan_amount" class="form-control" value="{{ deduction.loan_amount }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Other Deductions</label>
+                    <input type="number" name="other_deductions" class="form-control" value="{{ deduction.other_deductions }}" step="0.01">
+                </div>
+                
+                <div class="alert alert-danger mt-4 mb-4">
+                    <strong>Total Deductions:</strong>
+                    <br>
+                    <span id="totalDeductions">Calculating...</span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/deductions/" class="btn btn-secondary btn-lg w-100">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateTotal() {
+    const fields = ['income_tax', 'provident_fund', 'esi', 'health_insurance', 'professional_tax', 'loan_amount', 'other_deductions'];
+    let total = 0;
+    
+    fields.forEach(field => {
+        const value = parseFloat(document.querySelector(`input[name="${field}"]`).value) || 0;
+        total += value;
+    });
+    
+    document.getElementById('totalDeductions').textContent = `₹${total.toFixed(2)}`;
+}
+
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('change', calculateTotal);
+    input.addEventListener('keyup', calculateTotal);
+});
+
+calculateTotal();
+</script>
+{% endblock %}

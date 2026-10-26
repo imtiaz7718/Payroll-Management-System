@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-chart-line"></i> Payroll Dashboard
+    </h1>
+</div>
+
+<!-- Statistics Cards Row 1 -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="stat-card primary">
+            <div class="stat-label">Total Employees</div>
+            <div class="stat-number">{{ total_employees }}</div>
+            <small><i class="fas fa-users"></i> Active</small>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card success">
+            <div class="stat-label">Present Today</div>
+            <div class="stat-number">{{ present_today }}</div>
+            <small><i class="fas fa-check-circle"></i> Marked Attendance</small>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card warning">
+            <div class="stat-label">On Leave</div>
+            <div class="stat-number">{{ leave_today }}</div>
+            <small><i class="fas fa-calendar-times"></i> Currently</small>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stat-card info">
+            <div class="stat-label">Total Payroll</div>
+            <div class="stat-number">₹{{ total_gross_salary|floatformat:0 }}</div>
+            <small><i class="fas fa-money-bill-wave"></i> Monthly</small>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+        <div class="glass">
+            <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Position Distribution</h5>
+            <canvas id="positionChart" height="100"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="glass">
+            <h5 class="mb-3"><i class="fas fa-chart-pie"></i> Attendance Status</h5>
+            <canvas id="attendanceChart" height="100"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="row mb-4">
+    <div class="col-lg-6 mb-3">
+        <div class="glass">
+            <h5 class="mb-3"><i class="fas fa-clock"></i> Recent Payrolls</h5>
+            {% if recent_payrolls %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Month</th>
+                                <th>Net Salary</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payroll in recent_payrolls %}
+                            <tr>
+                                <td><strong>{{ payroll.employee.name }}</strong></td>
+                                <td>{{ payroll.month }}/{{ payroll.year }}</td>
+                                <td>₹{{ payroll.net_salary|floatformat:2 }}</td>
+                                <td>
+                                    {% if payroll.status == 'Processed' %}
+                                        <span class="badge badge-success">{{ payroll.status }}</span>
+                                    {% elif payroll.status == 'Approved' %}
+                                        <span class="badge badge-info">{{ payroll.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ payroll.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No recent payrolls</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6 mb-3">
+        <div class="glass">
+            <h5 class="mb-3"><i class="fas fa-file-invoice"></i> Recent Payslips</h5>
+            {% if recent_payslips %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Payslip #</th>
+                                <th>Employee</th>
+                                <th>Net Salary</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payslip in recent_payslips %}
+                            <tr>
+                                <td><strong>{{ payslip.payslip_number }}</strong></td>
+                                <td>{{ payslip.employee.name }}</td>
+                                <td>₹{{ payslip.net_salary|floatformat:2 }}</td>
+                                <td>{{ payslip.generated_date|date:"d M Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">No recent payslips</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="glass">
+    <h5 class="mb-3"><i class="fas fa-lightning-bolt"></i> Quick Actions</h5>
+    <div class="row">
+        <div class="col-md-3 mb-2">
+            <a href="/employees/add/" class="btn btn-primary w-100">
+                <i class="fas fa-user-plus"></i> Add Employee
+            </a>
+        </div>
+        <div class="col-md-3 mb-2">
+            <a href="/attendance/mark/" class="btn btn-success w-100">
+                <i class="fas fa-clipboard-check"></i> Mark Attendance
+            </a>
+        </div>
+        <div class="col-md-3 mb-2">
+            <a href="/payroll/process/" class="btn btn-warning w-100">
+                <i class="fas fa-cogs"></i> Process Payroll
+            </a>
+        </div>
+        <div class="col-md-3 mb-2">
+            <a href="/reports/generate/" class="btn btn-info w-100">
+                <i class="fas fa-file-pdf"></i> Generate Report
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Position Distribution Chart
+const positionCtx = document.getElementById('positionChart').getContext('2d');
+new Chart(positionCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ position_labels|safe }},
+        datasets: [{
+            label: 'Employee Count',
+            data: {{ position_data|safe }},
+            backgroundColor: [
+                'rgba(102, 126, 234, 0.7)',
+                'rgba(118, 75, 162, 0.7)',
+                'rgba(17, 153, 142, 0.7)',
+                'rgba(56, 239, 125, 0.7)'
+            ],
+            borderColor: [
+                'rgb(102, 126, 234)',
+                'rgb(118, 75, 162)',
+                'rgb(17, 153, 142)',
+                'rgb(56, 239, 125)'
+            ],
+            borderWidth: 2,
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    font: { size: 12, weight: 'bold' },
+                    color: '#333'
+                }
+            },
+            title: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: { color: '#666' },
+                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+            },
+            x: {
+                ticks: { color: '#666' },
+                grid: { display: false }
+            }
+        }
+    }
+});
+
+// Attendance Status Chart
+const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+new Chart(attendanceCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Present', 'Absent', 'Leave'],
+        datasets: [{
+            data: [{{ present_today }}, {{ absent_today }}, {{ leave_today }}],
+            backgroundColor: [
+                'rgba(17, 153, 142, 0.8)',
+                'rgba(235, 51, 73, 0.8)',
+                'rgba(240, 147, 251, 0.8)'
+            ],
+            borderColor: [
+                'rgb(17, 153, 142)',
+                'rgb(235, 51, 73)',
+                'rgb(240, 147, 251)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    font: { size: 12, weight: 'bold' },
+                    color: '#333',
+                    padding: 15
+                }
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}

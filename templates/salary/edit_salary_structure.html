@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-edit"></i> Edit Salary Structure - {{ employee.name }}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="glass">
+            <form method="post">
+                {% csrf_token %}
+                
+                <h5 class="mb-3">Salary Components</h5>
+                
+                <div class="mb-3">
+                    <label class="form-label">Base Salary *</label>
+                    <input type="number" name="base_salary" class="form-control" value="{{ salary_structure.base_salary }}" step="0.01" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Dearness Allowance</label>
+                    <input type="number" name="dearness_allowance" class="form-control" value="{{ salary_structure.dearness_allowance }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">House Rent Allowance</label>
+                    <input type="number" name="house_rent_allowance" class="form-control" value="{{ salary_structure.house_rent_allowance }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Medical Allowance</label>
+                    <input type="number" name="medical_allowance" class="form-control" value="{{ salary_structure.medical_allowance }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Conveyance Allowance</label>
+                    <input type="number" name="conveyance_allowance" class="form-control" value="{{ salary_structure.conveyance_allowance }}" step="0.01">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Other Allowances</label>
+                    <input type="number" name="other_allowances" class="form-control" value="{{ salary_structure.other_allowances }}" step="0.01">
+                </div>
+                
+                <div class="alert alert-info mt-4 mb-4">
+                    <strong>Gross Salary = Base + All Allowances</strong>
+                    <br>
+                    <span id="grossSalary">Calculating...</span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/salary-structure/{{ employee.id }}/" class="btn btn-secondary btn-lg w-100">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateGross() {
+    const base = parseFloat(document.querySelector('input[name="base_salary"]').value) || 0;
+    const da = parseFloat(document.querySelector('input[name="dearness_allowance"]').value) || 0;
+    const hra = parseFloat(document.querySelector('input[name="house_rent_allowance"]').value) || 0;
+    const med = parseFloat(document.querySelector('input[name="medical_allowance"]').value) || 0;
+    const conv = parseFloat(document.querySelector('input[name="conveyance_allowance"]').value) || 0;
+    const other = parseFloat(document.querySelector('input[name="other_allowances"]').value) || 0;
+    
+    const gross = base + da + hra + med + conv + other;
+    document.getElementById('grossSalary').textContent = `₹${gross.toFixed(2)}`;
+}
+
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('change', calculateGross);
+    input.addEventListener('keyup', calculateGross);
+});
+
+calculateGross();
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="page-title">
+        <i class="fas fa-user-edit"></i> Edit Employee - {{ employee.name }}
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="glass">
+            <form method="post">
+                {% csrf_token %}
+                
+                <h5 class="mb-3">Basic Information</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ employee.name }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="{{ employee.email }}" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" value="{{ employee.phone }}">
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Employment Details</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Position</label>
+                        <select name="position" class="form-select" required>
+                            <option value="Junior" {% if employee.position == 'Junior' %}selected{% endif %}>Junior</option>
+                            <option value="Senior" {% if employee.position == 'Senior' %}selected{% endif %}>Senior</option>
+                            <option value="Manager" {% if employee.position == 'Manager' %}selected{% endif %}>Manager</option>
+                            <option value="Director" {% if employee.position == 'Director' %}selected{% endif %}>Director</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Department</label>
+                        <select name="department" class="form-select" required>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}" {% if employee.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Experience (Years)</label>
+                        <input type="number" name="experience" class="form-control" value="{{ employee.experience }}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Base Salary</label>
+                        <input type="number" name="base_salary" class="form-control" value="{{ employee.base_salary }}" step="0.01" required>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Address</h5>
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <textarea name="address" class="form-control" rows="3">{{ employee.address }}</textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" value="{{ employee.city }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">State</label>
+                        <input type="text" name="state" class="form-control" value="{{ employee.state }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="Active" {% if employee.status == 'Active' %}selected{% endif %}>Active</option>
+                            <option value="Inactive" {% if employee.status == 'Inactive' %}selected{% endif %}>Inactive</option>
+                            <option value="On Leave" {% if employee.status == 'On Leave' %}selected{% endif %}>On Leave</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/employees/{{ employee.id }}/" class="btn btn-secondary btn-lg w-100">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

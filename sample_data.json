@@ -1,0 +1,116 @@
+{
+  "departments": [
+    {
+      "name": "Human Resources",
+      "description": "HR department managing recruitment and employee relations"
+    },
+    {
+      "name": "Finance",
+      "description": "Finance department handling payroll and accounting"
+    },
+    {
+      "name": "Information Technology",
+      "description": "IT department managing software and infrastructure"
+    },
+    {
+      "name": "Operations",
+      "description": "Operations department managing daily business operations"
+    },
+    {
+      "name": "Sales",
+      "description": "Sales department responsible for revenue generation"
+    }
+  ],
+  "employees": [
+    {
+      "first_name": "Rajesh",
+      "last_name": "Kumar",
+      "email": "rajesh.kumar@company.com",
+      "phone": "9876543210",
+      "position": "Manager",
+      "department": "Human Resources",
+      "experience": 5,
+      "base_salary": 75000,
+      "address": "123 Business Street",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip_code": "560001",
+      "pan": "ABCDE1234F",
+      "aadhar": "123456789012",
+      "bank_account": "10001000100001",
+      "ifsc_code": "SBIN0001234"
+    },
+    {
+      "first_name": "Priya",
+      "last_name": "Singh",
+      "email": "priya.singh@company.com",
+      "phone": "9876543211",
+      "position": "Senior Developer",
+      "department": "Information Technology",
+      "experience": 4,
+      "base_salary": 85000,
+      "address": "456 Tech Avenue",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip_code": "560002",
+      "pan": "ABCDE1235F",
+      "aadhar": "123456789013",
+      "bank_account": "10001000100002",
+      "ifsc_code": "SBIN0001234"
+    },
+    {
+      "first_name": "Amit",
+      "last_name": "Patel",
+      "email": "amit.patel@company.com",
+      "phone": "9876543212",
+      "position": "Junior Developer",
+      "department": "Information Technology",
+      "experience": 1,
+      "base_salary": 45000,
+      "address": "789 Code Street",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip_code": "560003",
+      "pan": "ABCDE1236F",
+      "aadhar": "123456789014",
+      "bank_account": "10001000100003",
+      "ifsc_code": "SBIN0001234"
+    },
+    {
+      "first_name": "Neha",
+      "last_name": "Sharma",
+      "email": "neha.sharma@company.com",
+      "phone": "9876543213",
+      "position": "Accountant",
+      "department": "Finance",
+      "experience": 3,
+      "base_salary": 55000,
+      "address": "321 Finance Road",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip_code": "560004",
+      "pan": "ABCDE1237F",
+      "aadhar": "123456789015",
+      "bank_account": "10001000100004",
+      "ifsc_code": "SBIN0001234"
+    },
+    {
+      "first_name": "Vikas",
+      "last_name": "Gupta",
+      "email": "vikas.gupta@company.com",
+      "phone": "9876543214",
+      "position": "Sales Executive",
+      "department": "Sales",
+      "experience": 2,
+      "base_salary": 50000,
+      "address": "654 Market Street",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "zip_code": "560005",
+      "pan": "ABCDE1238F",
+      "aadhar": "123456789016",
+      "bank_account": "10001000100005",
+      "ifsc_code": "SBIN0001234"
+    }
+  ]
+}
