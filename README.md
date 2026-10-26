@@ -1,4 +1,9 @@
 # Payroll Management System
+
+Project Link: https://payroll-management-system-3-5h6q.onrender.com/login/?next=/
+username: admin
+password: AdminPass123!
+
 ## Complete HR & Payroll Automation Platform
 
 ### Project Overview
