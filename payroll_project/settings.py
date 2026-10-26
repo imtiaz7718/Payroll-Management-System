@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-raa_&ys&@o-d$i_vz%d93yn81br15%!ht&1ud5n3110=g%&7pm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['payroll-management-system-3-5h6q.onrender.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://payroll-management-system-3-5h6q.onrender.com']
 
 
 # Application definition
